@@ -24,7 +24,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:id="@+id/rounded_alert_dialog_download_all"
         android:clickable="true"
         android:focusable="true"
@@ -32,15 +31,12 @@
         app:layout_constraintTop_toBottomOf="@+id/rounded_alert_dialog_title">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:text="Download all"
             android:textColor="@color/black"
-            android:padding="8dp"
-            android:background="@drawable/bottom_border"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:padding="16dp"
+            android:background="@drawable/bottom_border" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
