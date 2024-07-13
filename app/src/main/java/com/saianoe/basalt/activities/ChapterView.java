@@ -397,6 +397,8 @@ public class ChapterView extends AppCompatActivity implements ChapterAdapter.OnL
             try {
                 if (jsonObject != null){
                     mangaChapters.clear();
+                    mangaChapterIds.clear();
+                    mangaChapterTitles.clear();
                     JSONArray data = jsonObject.getJSONArray(typeData);
                     for (int a = 0; a < data.length(); a++){
                         JSONObject id = data.getJSONObject(a);

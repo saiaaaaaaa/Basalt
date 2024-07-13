@@ -156,6 +156,8 @@ public class HomeFragment extends Fragment implements MangaAdapter.OnItemClickLi
         texttitle.setText(R.string.remove_from_home_library);
         Button leftButton = dialogView.findViewById(R.id.rounded_alert_dialog_left_button);
         Button rightButton = dialogView.findViewById(R.id.rounded_alert_dialog_right_button);
+        leftButton.setText(R.string.no);
+        rightButton.setText(R.string.yes);
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
