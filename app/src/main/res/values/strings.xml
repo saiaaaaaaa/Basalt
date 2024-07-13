@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Basalt</string>
+    <string name="enable_downloads">Enable downloads</string>
+    <string name="data_saver_mode">Data saver mode</string>
+    <string name="download_in_data_saver_mode">Download in data saver mode</string>
+    <string name="download_path">Download path:</string>
+    <string name="no_path_set">No path set.</string>
+    <string name="import_data">Import Data</string>
+    <string name="export_data">Export Data</string>
+    <string name="no_items_available">No items available.</string>
+    <string name="no_results_found">No results found.</string>
+    <string name="no_more_pages">No more pages.</string>
+    <string name="no_previous_pages">No previous pages.</string>
+    <string name="next_chapter">Next chapter</string>
+    <string name="previous_chapter">Previous chapter</string>
+    <string name="ok">Ok</string>
+    <string name="this_is_already_in_your_home_library">This is already in your home library.</string>
+    <string name="remove_from_home_library">Remove from home library?</string>
+    <string name="add_to_home_library">Add to home library?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="bad_connection"><![CDATA[Bad connection... >~<]]></string>
+    <string name="in_home_library">In home library</string>
+    <string name="download_chapter_s">Download chapter/s</string>
+    <string name="cancel">Cancel</string>
+    <string name="download">Download</string>
+    <string name="add_to_home">Add to home</string>
+</resources>
