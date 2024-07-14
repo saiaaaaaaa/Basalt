@@ -117,6 +117,7 @@ public class HomeFragment extends Fragment implements MangaAdapter.OnItemClickLi
             Map<String, String> columns = new HashMap<>();
             columns.put(readTableColumns[0], tableColumnType);
             columns.put(readTableColumns[1], tableColumnType);
+            columns.put(readTableColumns[2], tableColumnType);
             es.createTable(readDB, readTable, columns);
         }
         if (!es.doesTableExist(downloadedDB, downloadedTable)){

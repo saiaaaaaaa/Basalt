@@ -17,7 +17,7 @@ public class Constants {
     public static final String downloadedTable = "downloadedTable";
     public static final String updateTable = "updateTable";
     public static final String[] homeTableColumns = {"h_m_id", "h_m_title", "h_m_cover"};
-    public static final String[] readTableColumns = {"r_m_id", "r_ch_id_and_title"};
+    public static final String[] readTableColumns = {"r_m_id", "r_ch_id", "r_ch_title"};
     public static final String downloadedTableColumn = "d_m_id_and_ch_id_and_title";
     public static final String[] updateTableColumns = {"u_m_id", "u_ch_id_and_title"};
     public static final String[] intentFromManga = {"mangaId", "mangaTitle", "mangaCover"};
