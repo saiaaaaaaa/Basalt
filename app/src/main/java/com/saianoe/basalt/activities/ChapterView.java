@@ -7,9 +7,9 @@ import static com.saianoe.basalt.others.Constants.defaultComparator;
 import static com.saianoe.basalt.others.Constants.downloadPathString;
 import static com.saianoe.basalt.others.Constants.downloadPathNotSet;
 import static com.saianoe.basalt.others.Constants.downloadPermissionCode;
-import static com.saianoe.basalt.others.Constants.downloadedColumn;
 import static com.saianoe.basalt.others.Constants.downloadedDB;
 import static com.saianoe.basalt.others.Constants.downloadedTable;
+import static com.saianoe.basalt.others.Constants.downloadedTableColumn;
 import static com.saianoe.basalt.others.Constants.enableDownloads;
 import static com.saianoe.basalt.others.Constants.enableDownloadsDataSaver;
 import static com.saianoe.basalt.others.Constants.feedUrl;
@@ -152,75 +152,7 @@ public class ChapterView extends AppCompatActivity implements ChapterAdapter.OnL
                     i.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
                     startActivityForResult(i, downloadPermissionCode);
                 } else {
-                    List<String> tempIds = new ArrayList<>();
-                    List<String> tempTitles = new ArrayList<>();
-                    for (Map.Entry<String, String> a : mangaChapters.entrySet()){
-                        tempIds.add(a.getValue());
-                        tempTitles.add("Chapter " + a.getKey());
-                    }
-
-                    /*Intent i = new Intent(this, DownloadActivity.class);
-                    i.putExtra("downloadIds", tempIds.toArray(new String[0]));
-                    i.putExtra("downloadTitles", tempTitles.toArray(new String[0]));
-                    startActivity(i);
-*/
-                    LayoutInflater layoutInflater = LayoutInflater.from(ChapterView.this);
-                    View dialogView = layoutInflater.inflate(R.layout.rounded_alert_dialog_layout_download, null);
-                    final TextView texttitle = dialogView.findViewById(R.id.rounded_alert_dialog_title);
-                    RecyclerView rv = dialogView.findViewById(R.id.rounded_alert_dialog_recycler_view);
-                    LinearLayoutManager downloadDialogLinearLayoutManager = new LinearLayoutManager(ChapterView.this, LinearLayoutManager.VERTICAL, false);
-                    rv.setLayoutManager(downloadDialogLinearLayoutManager);
-                    downloadAdapter = new DownloadAdapter(this, tempTitles, tempIds);
-                    rv.setAdapter(downloadAdapter);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ChapterView.this)
-                            .setView(dialogView);
-                    AlertDialog alertDialog = builder.create();
-                    Objects.requireNonNull(alertDialog.getWindow()).getDecorView().setBackgroundColor(Color.TRANSPARENT);
-                    texttitle.setText(R.string.download_chapter_s);
-                    Button leftButton = dialogView.findViewById(R.id.rounded_alert_dialog_left_button);
-                    Button rightButton = dialogView.findViewById(R.id.rounded_alert_dialog_right_button);
-                    ConstraintLayout downloadAll = dialogView.findViewById(R.id.rounded_alert_dialog_download_all);
-                    downloadAll.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            List<String> toDownload = downloadAdapter.allChecked();
-                            for (int a = 0; a < toDownload.size(); a++){
-                                if (toDownload.get(a).equals(one)){
-                                    globalPosition = a;
-                                    notificationDownloadStatusList.add("Downloading " + getIntent().getStringExtra(intentFromManga[1]) + " - " + mangaChapterTitles.get(globalPosition));
-                                    startNotification();
-                                    new PageGetter().execute(feedUrl + mangaChapterIds.get(globalPosition));
-                                    break;
-                                }
-                            }
-                            alertDialog.hide();
-                        }
-                    });
-                    leftButton.setText(R.string.cancel);
-                    rightButton.setText(R.string.download);
-                    leftButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            alertDialog.hide();
-                        }
-                    });
-                    rightButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            List<String> toDownload = downloadAdapter.getChecked();
-                            for (int a = 0; a < toDownload.size(); a++){
-                                if (toDownload.get(a).equals(one)){
-                                    globalPosition = a;
-                                    notificationDownloadStatusList.add("Downloading " + getIntent().getStringExtra(intentFromManga[1]) + " - " + mangaChapterTitles.get(globalPosition));
-                                    startNotification();
-                                    new PageGetter().execute(feedUrl + mangaChapterIds.get(globalPosition));
-                                    break;
-                                }
-                            }
-                            alertDialog.hide();
-                        }
-                    });
-                    alertDialog.show();
+                    showDownloadDialog();
                 }
             } else {
                 if (ActivityCompat.checkSelfPermission(ChapterView.this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
@@ -228,75 +160,7 @@ public class ChapterView extends AppCompatActivity implements ChapterAdapter.OnL
                     Toast.makeText(ChapterView.this, functionRequiresStorageAccess, Toast.LENGTH_SHORT).show();
                     ActivityCompat.requestPermissions(ChapterView.this, new String[]{WRITE_EXTERNAL_STORAGE}, downloadPermissionCode);
                 } else {
-                    List<String> tempIds = new ArrayList<>();
-                    List<String> tempTitles = new ArrayList<>();
-                    for (Map.Entry<String, String> a : mangaChapters.entrySet()){
-                        tempIds.add(a.getValue());
-                        tempTitles.add("Chapter " + a.getKey());
-                    }
-
-                    /*Intent i = new Intent(this, DownloadActivity.class);
-
-                    i.putExtra("downloadIds", tempIds.toArray(new String[0]));
-                    i.putExtra("downloadTitles", tempTitles.toArray(new String[0]));
-                    startActivity(i);*/
-                    LayoutInflater layoutInflater = LayoutInflater.from(ChapterView.this);
-                    View dialogView = layoutInflater.inflate(R.layout.rounded_alert_dialog_layout_download, null);
-                    final TextView texttitle = dialogView.findViewById(R.id.rounded_alert_dialog_title);
-                    RecyclerView rv = dialogView.findViewById(R.id.rounded_alert_dialog_recycler_view);
-                    LinearLayoutManager downloadDialogLinearLayoutManager = new LinearLayoutManager(ChapterView.this, LinearLayoutManager.VERTICAL, false);
-                    rv.setLayoutManager(downloadDialogLinearLayoutManager);
-                    downloadAdapter = new DownloadAdapter(this, tempTitles, tempIds);
-                    rv.setAdapter(downloadAdapter);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ChapterView.this)
-                            .setView(dialogView);
-                    AlertDialog alertDialog = builder.create();
-                    Objects.requireNonNull(alertDialog.getWindow()).getDecorView().setBackgroundColor(Color.TRANSPARENT);
-                    texttitle.setText(R.string.download_chapter_s);
-                    Button leftButton = dialogView.findViewById(R.id.rounded_alert_dialog_left_button);
-                    Button rightButton = dialogView.findViewById(R.id.rounded_alert_dialog_right_button);
-                    ConstraintLayout downloadAll = dialogView.findViewById(R.id.rounded_alert_dialog_download_all);
-                    downloadAll.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            List<String> toDownload = downloadAdapter.allChecked();
-                            for (int a = 0; a < toDownload.size(); a++){
-                                if (toDownload.get(a).equals(one)){
-                                    globalPosition = a;
-                                    notificationDownloadStatusList.add("Downloading " + getIntent().getStringExtra(intentFromManga[1]) + " - " + mangaChapterTitles.get(globalPosition));
-                                    startNotification();
-                                    new PageGetter().execute(feedUrl + mangaChapterIds.get(globalPosition));
-                                    break;
-                                }
-                            }
-                            alertDialog.hide();
-                        }
-                    });
-                    leftButton.setText(R.string.cancel);
-                    rightButton.setText(R.string.download);
-                    leftButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            alertDialog.hide();
-                        }
-                    });
-                    rightButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            List<String> toDownload = downloadAdapter.getChecked();
-                            for (int a = 0; a < toDownload.size(); a++){
-                                if (toDownload.get(a).equals(one)){
-                                    globalPosition = a;
-                                    notificationDownloadStatusList.add("Downloading " + getIntent().getStringExtra(intentFromManga[1]) + " - " + mangaChapterTitles.get(globalPosition));
-                                    startNotification();
-                                    new PageGetter().execute(feedUrl + mangaChapterIds.get(globalPosition));
-                                    break;
-                                }
-                            }
-                            alertDialog.hide();
-                        }
-                    });
-                    alertDialog.show();
+                    showDownloadDialog();
                 }
             }
         });
@@ -308,8 +172,8 @@ public class ChapterView extends AppCompatActivity implements ChapterAdapter.OnL
                 addToHomeTextView.setText(R.string.in_home_library);
                 Map<String, String> newValues = new HashMap<>();
                 newValues.put(homeTableColumns[0], getIntent().getStringExtra(intentFromManga[0]));
-                newValues.put(homeTableColumns[2], getIntent().getStringExtra(intentFromManga[2]));
                 newValues.put(homeTableColumns[1], getIntent().getStringExtra(intentFromManga[1]));
+                newValues.put(homeTableColumns[2], getIntent().getStringExtra(intentFromManga[2]));
                 es.insertToTable(homeDB, homeTable, newValues);
             } else {
                 addToHomeImageView.setImageResource(R.drawable.baseline_favorite_border_24);
@@ -336,6 +200,73 @@ public class ChapterView extends AppCompatActivity implements ChapterAdapter.OnL
         Picasso.get().load(getIntent().getStringExtra(intentFromManga[2])).transform(blurTransformation).into(bannerImageView);
 
         mangaChapters = new TreeMap<>(defaultComparator);
+    }
+
+    void showDownloadDialog(){
+        List<String> tempIds = new ArrayList<>();
+        List<String> tempTitles = new ArrayList<>();
+        for (Map.Entry<String, String> a : mangaChapters.entrySet()){
+            tempIds.add(a.getValue());
+            tempTitles.add("Chapter " + a.getKey());
+        }
+
+        LayoutInflater layoutInflater = LayoutInflater.from(ChapterView.this);
+        View dialogView = layoutInflater.inflate(R.layout.rounded_alert_dialog_layout_download, null);
+        final TextView texttitle = dialogView.findViewById(R.id.rounded_alert_dialog_title);
+        RecyclerView rv = dialogView.findViewById(R.id.rounded_alert_dialog_recycler_view);
+        LinearLayoutManager downloadDialogLinearLayoutManager = new LinearLayoutManager(ChapterView.this, LinearLayoutManager.VERTICAL, false);
+        rv.setLayoutManager(downloadDialogLinearLayoutManager);
+        downloadAdapter = new DownloadAdapter(this, tempTitles, tempIds);
+        rv.setAdapter(downloadAdapter);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ChapterView.this)
+                .setView(dialogView);
+        AlertDialog alertDialog = builder.create();
+        Objects.requireNonNull(alertDialog.getWindow()).getDecorView().setBackgroundColor(Color.TRANSPARENT);
+        texttitle.setText(R.string.download_chapter_s);
+        Button leftButton = dialogView.findViewById(R.id.rounded_alert_dialog_left_button);
+        Button rightButton = dialogView.findViewById(R.id.rounded_alert_dialog_right_button);
+        ConstraintLayout downloadAll = dialogView.findViewById(R.id.rounded_alert_dialog_download_all);
+        downloadAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<String> toDownload = downloadAdapter.allChecked();
+                for (int a = 0; a < toDownload.size(); a++){
+                    if (toDownload.get(a).equals(one)){
+                        globalPosition = a;
+                        notificationDownloadStatusList.add("Downloading " + getIntent().getStringExtra(intentFromManga[1]) + " - " + mangaChapterTitles.get(globalPosition));
+                        startNotification();
+                        new PageGetter().execute(feedUrl + mangaChapterIds.get(globalPosition));
+                        break;
+                    }
+                }
+                alertDialog.hide();
+            }
+        });
+        leftButton.setText(R.string.cancel);
+        rightButton.setText(R.string.download);
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.hide();
+            }
+        });
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<String> toDownload = downloadAdapter.getChecked();
+                for (int a = 0; a < toDownload.size(); a++){
+                    if (toDownload.get(a).equals(one)){
+                        globalPosition = a;
+                        notificationDownloadStatusList.add("Downloading " + getIntent().getStringExtra(intentFromManga[1]) + " - " + mangaChapterTitles.get(globalPosition));
+                        startNotification();
+                        new PageGetter().execute(feedUrl + mangaChapterIds.get(globalPosition));
+                        break;
+                    }
+                }
+                alertDialog.hide();
+            }
+        });
+        alertDialog.show();
     }
 
     @Override
@@ -551,9 +482,9 @@ public class ChapterView extends AppCompatActivity implements ChapterAdapter.OnL
                 downloadIndex++;
                 new ImageDownloader().execute(mangaChapterPagesToDownload, mangaChapterPageUrlsToDownload);
             } else {
-                if (!es.doesValueExist(downloadedDB, downloadedTable, downloadedColumn, getIntent().getStringExtra(intentFromManga[0]) + "$" + mangaChapterIds.get(globalPosition) + "$" + mangaChapterTitles.get(globalPosition))){
+                if (!es.doesValueExist(downloadedDB, downloadedTable, downloadedTableColumn, getIntent().getStringExtra(intentFromManga[0]) + "$" + mangaChapterIds.get(globalPosition) + "$" + mangaChapterTitles.get(globalPosition))){
                     Map<String, String> newValues = new HashMap<>();
-                    newValues.put(downloadedColumn, getIntent().getStringExtra(intentFromManga[0]) + "$" + mangaChapterIds.get(globalPosition) + "$" + mangaChapterTitles.get(globalPosition));
+                    newValues.put(downloadedTableColumn, getIntent().getStringExtra(intentFromManga[0]) + "$" + mangaChapterIds.get(globalPosition) + "$" + mangaChapterTitles.get(globalPosition));
                     es.insertToTable(downloadedDB, downloadedTable, newValues);
                 }
 

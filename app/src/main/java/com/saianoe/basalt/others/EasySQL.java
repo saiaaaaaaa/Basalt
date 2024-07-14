@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,10 +105,28 @@ public class EasySQL {
 
     public boolean doesValueExist(String databaseName, String tableName, String column, String value) {
         SQLiteDatabase db = openDatabase(databaseName);
-        String query = "SELECT 1 FROM " + tableName + " WHERE " + whereClauseCreator(column, value);
+        String query = "SELECT * FROM " + tableName + " WHERE " + whereClauseCreator(column, value);
         Cursor cursor = db.rawQuery(query, null);
         boolean exists = cursor.getCount() > 0;
         cursor.close();
         return exists;
+    }
+
+    public void deleteDuplicateRows(String databaseName, String tableName, String[] uniqueColumns) {
+        SQLiteDatabase db = openDatabase(databaseName);
+
+        StringBuilder groupByClause = new StringBuilder("GROUP BY ");
+        for (int i = 0; i < uniqueColumns.length; i++) {
+            groupByClause.append(uniqueColumns[i]);
+            if (i < uniqueColumns.length - 1) {
+                groupByClause.append(", ");
+            }
+        }
+
+        String deleteQuery = "DELETE FROM " + tableName + " WHERE rowid NOT IN (" +
+                "SELECT min(rowid) FROM " + tableName + " " + groupByClause + ")";
+
+        db.execSQL(deleteQuery);
+        db.close();
     }
 }

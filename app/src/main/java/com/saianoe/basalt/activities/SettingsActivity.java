@@ -93,7 +93,9 @@ public class SettingsActivity extends AppCompatActivity {
         downloadPath.setSelected(true);
 
         exportDataContainer.setOnClickListener(v -> {
-            removeDuplicates();
+            EasySQL es = new EasySQL(this);
+            es.deleteDuplicateRows(homeDB, homeTable, homeTableColumns);
+            es.deleteDuplicateRows(readDB, readTable, readTableColumns);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
                 if (!Environment.isExternalStorageManager()){
                     Toast.makeText(this, functionRequiresStorageAccess, Toast.LENGTH_SHORT).show();
@@ -207,54 +209,6 @@ public class SettingsActivity extends AppCompatActivity {
             i.setAction(Intent.ACTION_OPEN_DOCUMENT_TREE);
             startActivityForResult(i, downloadPathCode);
         });
-    }
-
-    void removeDuplicates(){
-        EasySQL es = new EasySQL(this);
-        List<Map<String, String>> readMangaValues = es.getTableValues(readDB, readTable);
-
-        List<String> temporaryReadMangaIds = new ArrayList<>();
-        List<String> temporaryReadMangaChapterIds = new ArrayList<>();
-        List<String> temporaryReadMangaChapterTitles = new ArrayList<>();
-        List<String> readManga = new ArrayList<>();
-
-        for (Map<String, String> value : readMangaValues){
-            for (Map.Entry<String, String> entry : value.entrySet()){
-                if (entry.getKey().equals(readTableColumns[0])){
-                    temporaryReadMangaIds.add(entry.getValue());
-                }
-                if (entry.getKey().equals(readTableColumns[1])){
-                    temporaryReadMangaChapterIds.add(entry.getValue());
-                }
-                if (entry.getKey().equals(readTableColumns[2])){
-                    temporaryReadMangaChapterTitles.add(entry.getValue());
-                }
-            }
-        }
-
-        for (int a = 0; a < temporaryReadMangaIds.size(); a++){
-            String line = temporaryReadMangaIds.get(a) + atSeparator + temporaryReadMangaChapterIds.get(a) + atSeparator + temporaryReadMangaChapterTitles.get(a);
-            if (!readManga.contains(line)){
-                readManga.add(line);
-            }
-        }
-
-        readManga.sort(defaultComparator);
-
-        es.deleteTable(readDB, readTable);
-        Map<String, String> readColumns = new HashMap<>();
-        readColumns.put(readTableColumns[0], tableColumnType);
-        readColumns.put(readTableColumns[1], tableColumnType);
-        readColumns.put(readTableColumns[2], tableColumnType);
-        es.createTable(readDB, readTable, readColumns);
-        for (String a : readManga){
-            String[] split = a.split(atSeparator);
-            Map<String, String> values = new HashMap<>();
-            values.put(readTableColumns[0], split[0]);
-            values.put(readTableColumns[1], split[1]);
-            values.put(readTableColumns[2], split[2]);
-            es.insertToTable(readDB, readTable, values);
-        }
     }
 
     byte[] dataBytes(){
@@ -386,7 +340,8 @@ public class SettingsActivity extends AppCompatActivity {
                 home.remove(outDataHome);
                 all.remove(outDataRead);
                 EasySQL es = getEasySQL(home, all);
-                removeDuplicates(es);
+                es.deleteDuplicateRows(homeDB, homeTable, homeTableColumns);
+                es.deleteDuplicateRows(readDB, readTable, readTableColumns);
             } catch (Exception ignored){
             }
         }
@@ -411,111 +366,5 @@ public class SettingsActivity extends AppCompatActivity {
             es.insertToTable(readDB, readTable, values);
         }
         return es;
-    }
-
-    void removeDuplicates(EasySQL es){
-        List<Map<String, String>> homeMangaValues = es.getTableValues(homeDB, homeTable);
-        List<Map<String, String>> readMangaValues = es.getTableValues(readDB, readTable);
-
-        List<String> temporaryHomeMangaIds = new ArrayList<>();
-        List<String> temporaryHomeMangaCovers = new ArrayList<>();
-        List<String> temporaryHomeMangaTitles = new ArrayList<>();
-        List<String> homeManga = new ArrayList<>();
-        List<String> temporaryReadMangaIds = new ArrayList<>();
-        List<String> temporaryReadMangaChapterIds = new ArrayList<>();
-        List<String> temporaryReadMangaChapterTitles = new ArrayList<>();
-        List<String> readManga = new ArrayList<>();
-
-        for (Map<String, String> value : homeMangaValues){
-            for (Map.Entry<String, String> entry : value.entrySet()){
-                if (entry.getKey().equals(homeTableColumns[0])){
-                    temporaryHomeMangaIds.add(entry.getValue());
-                }
-                if (entry.getKey().equals(homeTableColumns[2])){
-                    temporaryHomeMangaCovers.add(entry.getValue());
-                }
-                if (entry.getKey().equals(homeTableColumns[1])){
-                    temporaryHomeMangaTitles.add(entry.getValue());
-                }
-            }
-        }
-        for (Map<String, String> value : readMangaValues){
-            for (Map.Entry<String, String> entry : value.entrySet()){
-                if (entry.getKey().equals(readTableColumns[0])){
-                    temporaryReadMangaIds.add(entry.getValue());
-                }
-                if (entry.getKey().equals(readTableColumns[1])){
-                    temporaryReadMangaChapterIds.add(entry.getValue());
-                }
-                if (entry.getKey().equals(readTableColumns[2])){
-                    temporaryReadMangaChapterTitles.add(entry.getValue());
-                }
-            }
-        }
-
-        for (int a = 0; a < temporaryHomeMangaIds.size(); a++){
-            String line = temporaryHomeMangaIds.get(a) + atSeparator + temporaryHomeMangaCovers.get(a) + atSeparator + temporaryHomeMangaTitles.get(a);
-            if (!homeManga.contains(line)){
-                homeManga.add(line);
-            }
-        }
-        for (int a = 0; a < temporaryReadMangaIds.size(); a++){
-            String line = temporaryReadMangaIds.get(a) + atSeparator + temporaryReadMangaChapterIds.get(a) + atSeparator + temporaryReadMangaChapterTitles.get(a);
-            if (!readManga.contains(line)){
-                readManga.add(line);
-            }
-        }
-
-        homeManga.sort((o1, o2) -> {
-            String a = o1.split(atSeparator)[2].substring(7);
-            String b = o2.split(atSeparator)[2].substring(7);
-            if (a.equals(nullString)){
-                a = negOne;
-            }
-            if (b.equals(nullString)){
-                b = negOne;
-            }
-            return Double.compare(Double.parseDouble(a), Double.parseDouble(b));
-        });
-        readManga.sort((o1, o2) -> {
-            String a = o1.split(atSeparator)[2].substring(7);
-            String b = o2.split(atSeparator)[2].substring(7);
-            if (a.equals(nullString)){
-                a = negOne;
-            }
-            if (b.equals(nullString)){
-                b = negOne;
-            }
-            return Double.compare(Double.parseDouble(a), Double.parseDouble(b));
-        });
-
-        es.deleteTable(homeDB, homeTable);
-        es.deleteTable(readDB, readTable);
-        Map<String, String> homeColumns = new HashMap<>();
-        homeColumns.put(homeTableColumns[0], tableColumnType);
-        homeColumns.put(homeTableColumns[2], tableColumnType);
-        homeColumns.put(homeTableColumns[1], tableColumnType);
-        es.createTable(homeDB, homeTable, homeColumns);
-        Map<String, String> readColumns = new HashMap<>();
-        readColumns.put(readTableColumns[0], tableColumnType);
-        readColumns.put(readTableColumns[1], tableColumnType);
-        readColumns.put(readTableColumns[2], tableColumnType);
-        es.createTable(readDB, readTable, readColumns);
-        for (String a : homeManga){
-            String[] split = a.split(atSeparator);
-            Map<String, String> values = new HashMap<>();
-            values.put(homeTableColumns[0], split[0]);
-            values.put(homeTableColumns[2], split[1]);
-            values.put(homeTableColumns[1], split[2]);
-            es.insertToTable(homeDB, homeTable, values);
-        }
-        for (String a : readManga){
-            String[] split = a.split(atSeparator);
-            Map<String, String> values = new HashMap<>();
-            values.put(readTableColumns[0], split[0]);
-            values.put(readTableColumns[1], split[1]);
-            values.put(readTableColumns[2], split[2]);
-            es.insertToTable(readDB, readTable, values);
-        }
     }
 }

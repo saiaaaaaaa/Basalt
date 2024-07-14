@@ -11,12 +11,15 @@ public class Constants {
     public static final String homeDB = "homeDB";
     public static final String readDB = "readDB";
     public static final String downloadedDB = "downloadedDB";
+    public static final String updateDB = "updateDB";
     public static final String homeTable = "homeTable";
     public static final String readTable = "readTable";
     public static final String downloadedTable = "downloadedTable";
-    public static final String downloadedColumn = "downloadedInformation";
+    public static final String updateTable = "updateTable";
     public static final String[] homeTableColumns = {"h_m_id", "h_m_title", "h_m_cover"};
-    public static final String[] readTableColumns = {"r_m_id", "r_ch_id", "r_ch_title"};
+    public static final String[] readTableColumns = {"r_m_id", "r_ch_id_and_title"};
+    public static final String downloadedTableColumn = "d_m_id_and_ch_id_and_title";
+    public static final String[] updateTableColumns = {"u_m_id", "u_ch_id_and_title"};
     public static final String[] intentFromManga = {"mangaId", "mangaTitle", "mangaCover"};
     public static final String tableColumnType = "text";
     public static final String[] intentFromChapter = {"manga_chapter_position", "manga_chapters", "manga_chapters_titles"};
@@ -31,6 +34,7 @@ public class Constants {
     public static final int notificationChannelCode = 702;
     public static final int dataExportCode = 703;
     public static final int dataImportCode = 704;
+    public static final int updateNotificationChannelCode = 704;
     public static final Comparator defaultComparator = (o1, o2) -> {
         try {
             double a = Double.parseDouble((String) o1);
@@ -42,6 +46,7 @@ public class Constants {
     };
     public static SharedPreferences prefs;
     public static final List<String> notificationDownloadStatusList = new ArrayList<>();
+    public static final List<String> notificationUpdateStatusList = new ArrayList<>();
     public static SharedPreferences.Editor prefsEditor;
     public static final String prefsSettings = "basalt.settings";
     public static final String intentTypeData = "*/*";

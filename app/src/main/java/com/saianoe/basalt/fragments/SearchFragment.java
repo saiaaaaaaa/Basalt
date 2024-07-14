@@ -145,6 +145,7 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnItemClick
 
         if (ids.contains(mangaAdapter.getItemID(position))){
             texttitle.setText(R.string.this_is_already_in_your_home_library);
+            leftButton.setVisibility(View.GONE);
             rightButton.setText(R.string.ok);
             rightButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -154,6 +155,7 @@ public class SearchFragment extends Fragment implements MangaAdapter.OnItemClick
             });
         } else {
             texttitle.setText(R.string.add_to_home_library);
+            leftButton.setVisibility(View.VISIBLE);
             leftButton.setText(R.string.no);
             leftButton.setOnClickListener(new View.OnClickListener() {
                 @Override
