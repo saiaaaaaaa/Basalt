@@ -34,7 +34,7 @@ public class Constants {
     public static final int notificationChannelCode = 702;
     public static final int dataExportCode = 703;
     public static final int dataImportCode = 704;
-    public static final int updateNotificationChannelCode = 704;
+    public static final int updateNotificationChannelCode = 705;
     public static final Comparator defaultComparator = (o1, o2) -> {
         try {
             double a = Double.parseDouble((String) o1);
