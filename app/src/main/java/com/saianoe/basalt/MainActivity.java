@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                                 columns.put(updateTableColumns[0], mid);
                                 columns.put(updateTableColumns[1], chid + ":" + chtitle);
                                 es.insertToTable(updateDB, updateTable, columns);
-                                notificationDownloadStatusList.add(mid + " - " + chtitle);
+                                notificationUpdateStatusList.add(mid + " - " + chtitle);
                                 startNotification();
                             }
                         }
