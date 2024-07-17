@@ -352,21 +352,19 @@ public class ChapterView extends AppCompatActivity implements ChapterAdapter.OnL
                     uriDocumentFile = DocumentFile.fromTreeUri(ChapterView.this, uri);
 
                     if (uriDocumentFile.findFile(Objects.requireNonNull(getIntent().getStringExtra(intentFromManga[0]))) != null){
-                        uriDocumentFile = uriDocumentFile.findFile(Objects.requireNonNull(getIntent().getStringExtra(intentFromManga[0])));
-
-                        List<String> temporaryMangaChapterids = new ArrayList<>();
                         List<String> temporaryMangaChapterTitles = new ArrayList<>();
-                        for (DocumentFile a : uriDocumentFile.listFiles()){
-                            temporaryMangaChapterids.add(a.getName());
-                        }
 
                         List<Map<String, String>> values = es.getTableValues(downloadedDB, downloadedTable);
                         for (Map<String, String> value : values){
                             for (Map.Entry<String, String> entry : value.entrySet()){
-                                if (temporaryMangaChapterids.contains(entry.getValue().split("\\$")[1])){
+                                if (entry.getValue().split("\\$")[0].equals(getIntent().getStringExtra(intentFromManga[0]))){
                                     temporaryMangaChapterTitles.add(entry.getValue().split("\\$")[2]);
                                 }
                             }
+                        }
+
+                        if (temporaryMangaChapterTitles.isEmpty()){
+                            Toast.makeText(ChapterView.this, "No chapters downloaded.", Toast.LENGTH_SHORT).show();
                         }
 
                         ChapterAdapter chapterAdapter = new ChapterAdapter(ChapterView.this, getIntent().getStringExtra(intentFromManga[0]), temporaryMangaChapterTitles, ChapterView.this);
