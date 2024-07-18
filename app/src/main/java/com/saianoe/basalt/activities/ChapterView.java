@@ -358,7 +358,12 @@ public class ChapterView extends AppCompatActivity implements ChapterAdapter.OnL
                         for (Map<String, String> value : values){
                             for (Map.Entry<String, String> entry : value.entrySet()){
                                 if (entry.getValue().split("\\$")[0].equals(getIntent().getStringExtra(intentFromManga[0]))){
-                                    temporaryMangaChapterTitles.add(entry.getValue().split("\\$")[2]);
+                                    if (uriDocumentFile.findFile(entry.getValue().split("\\$")[1]) != null){
+                                        temporaryMangaChapterTitles.add(entry.getValue().split("\\$")[2]);
+                                    } else {
+                                        String whereClause = es.whereClauseCreator(downloadedTableColumn, entry.getValue());
+                                        es.deleteFromTable(downloadedDB, downloadedTable, whereClause);
+                                    }
                                 }
                             }
                         }
